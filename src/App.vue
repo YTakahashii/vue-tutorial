@@ -5,17 +5,32 @@
     <button :disabled="isDisabled" @click="add">追加</button>
     <!-- `@`は `v-on`の省略 -->
     <!-- `:` を前に付けると右辺はスクリプトとして変数が展開される (v-bindの省略) -->
-    <br>
-    <ul>
-      <li v-for="todo in todos" :key="todo.id" class="task-card">{{todo.text}}</li>
-    </ul>
     {{message}}
+    <br>
+    <template v-if="todos.length === 0">タスクはありません。</template>
+    <template v-else>
+      <ul>
+        <!-- <li v-for="todo in todos" :key="todo.id">{{todo.text}}</li> -->
+        <TaskCard
+          v-for="todo in todos"
+          :key="todo.id"
+          :text="todo.text"
+          :id="todo.id"
+          @remove-task="remove"
+        />
+      </ul>
+    </template>
   </div>
 </template>
 
 <script>
+import TaskCard from "./components/TaskCard";
+
 export default {
   name: "App",
+  components: {
+    TaskCard
+  },
   data: () => ({
     message: "message",
     todos: [{ id: 1, text: "Todo1" }]
@@ -28,6 +43,9 @@ export default {
       };
       this.todos.push(newTodo);
       this.message = "";
+    },
+    remove(id) {
+      this.todos = this.todos.filter(todo => todo.id !== id);
     }
   },
   // 算出プロパティ
