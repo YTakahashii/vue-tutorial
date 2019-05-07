@@ -1,31 +1,42 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link>|
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <h1>Lovely Vue</h1>
+    <input type="text" v-model="message">
+    <button :disabled="isDisabled" @click="add">追加</button>
+    <!-- `@`は `v-on`の省略 -->
+    <!-- `:` を前に付けると右辺はスクリプトとして変数が展開される (v-bindの省略) -->
+    <br>
+    <ul>
+      <li v-for="todo in todos" :key="todo.id" class="task-card">{{todo.text}}</li>
+    </ul>
+    {{message}}
   </div>
 </template>
 
-<style>
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-}
+<script>
+export default {
+  name: "App",
+  data: () => ({
+    message: "message",
+    todos: [{ id: 1, text: "Todo1" }]
+  }),
+  methods: {
+    add() {
+      const newTodo = {
+        id: this.todos.length + 1,
+        text: this.message
+      };
+      this.todos.push(newTodo);
+      this.message = "";
+    }
+  },
+  // 算出プロパティ
+  computed: {
+    isDisabled() {
+      return this.message.length === 0;
+    }
+  }
+};
+</script>
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+<style></style>
